@@ -1,0 +1,11 @@
+r6_gtf="ftp://ftp.flybase.net/genomes/Drosophila_melanogaster/current/gtf/dmel-all-r6.13.gtf.gz"
+
+wget -O - -q $r6_gtf \
+| gunzip \
+> ~/Summary_annotation_practice/data/raw/r6_gtf.txt
+
+bioawk -c gff '$feature == "mRNA" {print}' < ~/Summary_annotation_practice/data/raw/r6_gtf.txt | grep -o FBgn[0-9]* | uniq -c | sort -n | less > transcript_counts.txt
+
+bioawk -c gff  ' $feature ==  "exon"  {print $end - $start +1}'   ~/Summary_annotation_practice/data/raw/r6_gtf.txt | less > exon_length.txt
+
+bioawk -c gff  ' $feature == "gene" {print $end - $start +1}'   ~/Summary_annotation_practice/data/raw/r6_gtf.txt | less > gene_length.txt
